@@ -1,0 +1,580 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Jornada Rosa</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;800&family=Figtree:wght@400;500;600;700&display=swap">
+<style>
+/* Layout: one working column. A ribbon beside the title draws itself as the three pillars
+   (prevenir, detectar, agir) are completed; four tabs switch between the activities. */
+:root{
+  --font-display:"Bricolage Grotesque","Trebuchet MS",system-ui,sans-serif;
+  --font-body:"Figtree",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --bg:#FFF6F9;
+  --surface:#FFFFFF;
+  --ink:#3B1527;
+  --muted:#7B5568;
+  --line:#F2D4E0;
+  --track:#F3D9E4;
+  --accent:#C42061;
+  --on-accent:#FFFFFF;
+  --accent-text:#AC1B57;
+  --soft:#FDE6EF;
+  --soft-ink:#8F1749;
+  --good:#17754B;
+  --good-soft:#E1F4EA;
+  --bad:#B3261E;
+  --bad-soft:#FCE9E7;
+  --sun:#7F5300;
+  --sun-soft:#FFF0D2;
+  --shadow:0 1px 0 rgba(59,21,39,.04),0 10px 28px -14px rgba(59,21,39,.22);
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#1C0D16;--surface:#2A1522;--ink:#FCEAF1;--muted:#CBA7B8;--line:#4B2A3B;--track:#4A2838;
+    --accent:#FF7BA9;--on-accent:#2B0E1C;--accent-text:#FF9FC0;--soft:#3E1D2E;--soft-ink:#FFB7D0;
+    --good:#6ED6A2;--good-soft:#173A2A;--bad:#FF9288;--bad-soft:#47201F;--sun:#F2C66D;--sun-soft:#3E3115;
+    --shadow:0 10px 28px -14px rgba(0,0,0,.7);
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#1C0D16;--surface:#2A1522;--ink:#FCEAF1;--muted:#CBA7B8;--line:#4B2A3B;--track:#4A2838;
+  --accent:#FF7BA9;--on-accent:#2B0E1C;--accent-text:#FF9FC0;--soft:#3E1D2E;--soft-ink:#FFB7D0;
+  --good:#6ED6A2;--good-soft:#173A2A;--bad:#FF9288;--bad-soft:#47201F;--sun:#F2C66D;--sun-soft:#3E3115;
+  --shadow:0 10px 28px -14px rgba(0,0,0,.7);
+  color-scheme:dark;
+}
+
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font:400 16px/1.5 var(--font-body);-webkit-text-size-adjust:100%}
+button{font-family:inherit;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+
+.page{
+  max-width:760px;margin:0 auto;
+  padding-block:22px 48px;
+  padding-left:max(16px,env(safe-area-inset-left,0px));
+  padding-right:max(16px,env(safe-area-inset-right,0px));
+}
+.eyebrow{font:600 11px/1.3 var(--font-body);letter-spacing:.18em;text-transform:uppercase;color:var(--accent-text);margin:0}
+h1{font:800 clamp(2.125rem,9vw,2.875rem)/1 var(--font-display);letter-spacing:-.02em;margin:8px 0 10px;text-wrap:balance}
+h2{font:700 1.375rem/1.15 var(--font-display);margin:0;text-wrap:balance}
+h3{font:700 1.0625rem/1.2 var(--font-display);margin:0}
+
+.hero{display:grid;grid-template-columns:auto minmax(0,1fr);gap:18px;align-items:center}
+.ribbon{display:block;width:64px;height:auto;overflow:visible}
+.r-bg,.r-fg{fill:none;stroke-width:12;stroke-linecap:round;stroke-linejoin:round}
+.r-bg{stroke:var(--track)}
+.r-fg{stroke:var(--accent);stroke-dasharray:100 100;stroke-dashoffset:100;transition:stroke-dashoffset .9s cubic-bezier(.3,.7,.2,1),opacity .2s}
+.lede{margin:0;color:var(--muted);max-width:52ch}
+.stat{margin:8px 0 0;font:600 .8125rem/1.2 var(--font-body);color:var(--accent-text);font-variant-numeric:tabular-nums}
+
+.tabs{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;margin-top:24px}
+.tab{
+  appearance:none;border:1px solid var(--line);background:var(--surface);color:var(--ink);
+  border-radius:12px;padding:10px 9px 9px;min-height:68px;text-align:left;cursor:pointer;
+  display:flex;flex-direction:column;justify-content:space-between;gap:6px;min-width:0;
+  font:700 .8125rem/1.15 var(--font-body);
+}
+.tab .st{font:500 .75rem/1 var(--font-body);color:var(--muted);font-variant-numeric:tabular-nums}
+.tab .bar{display:block;height:4px;border-radius:4px;background:var(--track);overflow:hidden}
+.tab .bar i{display:block;height:100%;background:var(--accent);transition:width .4s ease}
+.tab[aria-selected="true"]{border-color:var(--accent);box-shadow:inset 0 0 0 1px var(--accent)}
+.tab.done .bar i{background:var(--good)}
+.tab.done .st{color:var(--good)}
+
+.panel{
+  margin-top:10px;background:var(--surface);border:1px solid var(--line);border-radius:18px;
+  padding:22px 16px;box-shadow:var(--shadow);display:grid;gap:30px;min-width:0;
+}
+@media (min-width:600px){.panel{padding:28px 28px}}
+.block{display:grid;gap:14px;min-width:0}
+.block+.block{border-top:1px solid var(--line);padding-top:28px}
+.sub{margin:0;color:var(--muted);max-width:62ch;font-size:.9375rem}
+.label{font:600 11px/1.3 var(--font-body);letter-spacing:.16em;text-transform:uppercase;color:var(--muted)}
+
+.readout{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.big{font:800 2.75rem/1 var(--font-display);font-variant-numeric:tabular-nums;letter-spacing:-.02em}
+.big span{font:500 .9375rem/1 var(--font-body);color:var(--muted);letter-spacing:0;margin-left:6px}
+.chip{display:inline-flex;align-items:center;border-radius:999px;padding:7px 12px;font:600 .8125rem/1 var(--font-body);background:var(--soft);color:var(--soft-ink);font-variant-numeric:tabular-nums}
+.chip.ok{background:var(--good-soft);color:var(--good)}
+.meter{position:relative;height:14px;border-radius:999px;background:var(--track)}
+.meter .fill{height:100%;border-radius:999px;background:var(--accent);transition:width .35s ease,background .2s}
+.meter.ok .fill{background:var(--good)}
+.meter .goal{position:absolute;top:-5px;bottom:-5px;left:83.33%;width:2px;background:var(--ink);border-radius:2px}
+.cap{position:relative;height:16px;margin-top:-6px;font:500 .75rem/1 var(--font-body);color:var(--muted)}
+.cap span{position:absolute;top:0}
+.cap .g{left:83.33%;transform:translateX(-50%);white-space:nowrap}
+
+.week{border-top:1px solid var(--line)}
+.day{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:center;padding:10px 0;border-bottom:1px solid var(--line)}
+.day b{display:block;font-weight:700}
+.day small{display:block;color:var(--muted);font-size:.8125rem;line-height:1.3}
+.seg{display:flex;gap:4px}
+.seg button{
+  appearance:none;width:38px;height:40px;border-radius:10px;border:1px solid var(--line);background:var(--bg);
+  color:var(--ink);font:600 .875rem/1 var(--font-body);cursor:pointer;font-variant-numeric:tabular-nums;padding:0;
+}
+.seg button[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
+.units{display:flex;justify-content:space-between;font:500 .75rem/1 var(--font-body);color:var(--muted);margin-bottom:6px}
+
+.note{margin:0;padding:12px 14px;border-radius:12px;background:var(--soft);font-size:.9375rem}
+.note.ok{background:var(--good-soft)}
+.note.warn{background:var(--sun-soft)}
+.note b{font-weight:700}
+
+.plate-wrap{display:grid;grid-template-columns:minmax(0,248px) minmax(0,1fr);gap:22px;align-items:center}
+@media (max-width:560px){.plate-wrap{grid-template-columns:minmax(0,1fr)}}
+.plate{
+  width:min(100%,248px);aspect-ratio:1;border-radius:50%;border:10px solid var(--line);background:var(--line);
+  display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:3px;overflow:hidden;max-width:100%;
+}
+.cell{
+  appearance:none;border:0;display:grid;place-items:center;padding:8px;text-align:center;
+  font:700 .875rem/1.15 var(--font-body);cursor:pointer;min-width:0;overflow-wrap:anywhere;
+}
+.cell.veg{background:var(--good-soft);color:var(--good)}
+.cell.pro{background:var(--soft);color:var(--soft-ink)}
+.cell.cer{background:var(--sun-soft);color:var(--sun)}
+.cell.empty{background:var(--bg);color:var(--muted);font-weight:500;font-size:.75rem;cursor:default}
+.legend{list-style:none;margin:0;padding:0;display:grid;gap:12px}
+.legend li{display:grid;grid-template-columns:14px minmax(0,1fr);gap:10px;align-items:start;font-size:.9rem}
+.legend i{width:14px;height:14px;border-radius:4px;margin-top:3px}
+.legend b{display:block;font-weight:700}
+.legend span{color:var(--muted);font-size:.8125rem;line-height:1.3;display:block}
+.sw-veg{background:var(--good)}.sw-pro{background:var(--accent)}.sw-cer{background:var(--sun)}
+
+.pool{display:flex;flex-wrap:wrap;gap:8px}
+.food{
+  appearance:none;border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:999px;
+  padding:9px 14px;min-height:40px;font:500 .9rem/1.1 var(--font-body);cursor:pointer;
+}
+.food[disabled]{opacity:.35;cursor:default;text-decoration:line-through}
+.food.nope{animation:shake .38s}
+@keyframes shake{20%{transform:translateX(-5px)}40%{transform:translateX(5px)}60%{transform:translateX(-3px)}80%{transform:translateX(3px)}}
+
+.btn{
+  appearance:none;border-radius:12px;border:1px solid var(--line);background:var(--surface);color:var(--ink);
+  font:600 .9375rem/1.2 var(--font-body);min-height:48px;padding:10px 14px;cursor:pointer;min-width:0;
+}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
+.btn.ghost{background:transparent;min-height:40px;font-size:.875rem;color:var(--muted)}
+.btn[disabled]{cursor:default}
+.btn[disabled]:not(.ok):not(.bad):not(.primary){opacity:.5}
+.btn.ok{border-color:var(--good);background:var(--good-soft);color:var(--good)}
+.btn.bad{border-color:var(--bad);background:var(--bad-soft);color:var(--bad)}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+
+.qcard{border-radius:14px;background:var(--soft);padding:18px 16px;display:grid;gap:10px;outline-offset:3px}
+.qcard .q{font:700 1.375rem/1.2 var(--font-display);margin:0;text-wrap:balance}
+.qhead{display:flex;justify-content:space-between;align-items:center;gap:12px}
+.dots{display:flex;gap:6px}
+.dots i{width:8px;height:8px;border-radius:50%;background:var(--track)}
+.dots i.on{background:var(--accent)}
+.answers{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.opts{display:grid;gap:8px}
+.opt{display:grid;grid-template-columns:28px minmax(0,1fr);gap:10px;align-items:start;text-align:left;font-weight:500}
+.opt .l{width:28px;height:28px;border-radius:50%;background:var(--soft);color:var(--soft-ink);display:grid;place-items:center;font:700 .8125rem/1 var(--font-body)}
+
+.verdict{border-radius:12px;padding:14px 16px;display:grid;gap:4px;font-size:.9375rem}
+.verdict strong{font:700 1rem/1.25 var(--font-display)}
+.verdict.ok{background:var(--good-soft)}.verdict.ok strong{color:var(--good)}
+.verdict.bad{background:var(--bad-soft)}.verdict.bad strong{color:var(--bad)}
+.verdict.part{background:var(--sun-soft)}.verdict.part strong{color:var(--sun)}
+
+.recap{list-style:none;margin:0;padding:0;border-top:1px solid var(--line)}
+.recap li{display:flex;justify-content:space-between;gap:12px;padding:10px 0;border-bottom:1px solid var(--line);font-size:.9rem}
+.recap span{min-width:0}
+.recap em{font-style:normal;font-weight:600;color:var(--accent-text);white-space:nowrap}
+
+details{border-top:1px solid var(--line);padding:2px 0}
+details:last-of-type{border-bottom:1px solid var(--line)}
+summary{cursor:pointer;list-style:none;display:flex;justify-content:space-between;gap:12px;align-items:center;font-weight:700;min-height:48px}
+summary::-webkit-details-marker{display:none}
+summary::after{content:"+";font:500 1.25rem/1 var(--font-body);color:var(--accent-text)}
+details[open] summary::after{content:"\2212"}
+details p{margin:0 0 14px;color:var(--muted);font-size:.9375rem;max-width:62ch}
+
+.todo{list-style:none;margin:0;padding:0;border-top:1px solid var(--line)}
+.todo li{display:flex;justify-content:space-between;gap:12px;align-items:center;padding:12px 0;border-bottom:1px solid var(--line);font-size:.9375rem;font-variant-numeric:tabular-nums}
+.todo li>span{min-width:0}
+.todo .ok{color:var(--good);font-weight:600}
+
+.pillars{display:grid;border-top:1px solid var(--line)}
+.pillar{display:grid;grid-template-columns:92px minmax(0,1fr);gap:12px;align-items:baseline;padding:14px 0;border-bottom:1px solid var(--line)}
+.pillar b{font:800 1rem/1 var(--font-display);color:var(--accent-text)}
+.pillar span{font-size:.9375rem}
+.msg{margin:0;border:1px dashed var(--accent);background:var(--soft);border-radius:12px;padding:14px;white-space:pre-wrap;font-size:.9375rem;overflow-wrap:anywhere}
+.help{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+.help li{font-size:.9375rem}
+.help b{font-weight:700}
+
+.foot{margin-top:22px;display:grid;gap:12px;color:var(--muted);font-size:.8125rem}
+.foot p{margin:0;max-width:62ch}
+
+@media (max-width:380px){
+  .hero{grid-template-columns:minmax(0,1fr)}
+  .tab{padding:9px 7px 8px;font-size:.78rem}
+}
+@media (prefers-reduced-motion:reduce){
+  *{transition:none!important;animation:none!important}
+}
+</style>
+
+<div class="page">
+  <header class="hero">
+    <svg class="ribbon" viewBox="16 -2 72 128" aria-hidden="true" focusable="false">
+      <path class="r-bg" pathLength="100" d="M26 114 C38 92 46 76 54 62 C68 40 76 24 66 12 C57 2 40 2 33 14 C28 26 38 46 50 62 C58 76 68 94 78 114"/>
+      <path class="r-fg" id="rfill" pathLength="100" d="M26 114 C38 92 46 76 54 62 C68 40 76 24 66 12 C57 2 40 2 33 14 C28 26 38 46 50 62 C58 76 68 94 78 114"/>
+    </svg>
+    <div>
+      <p class="eyebrow">Outubro Rosa · Câncer de mama</p>
+      <h1>Jornada Rosa</h1>
+      <p class="lede">Escolha, teste o que sabe e decida o que fazer. O laço só fecha quando você passa pelas três etapas: prevenir, detectar e agir.</p>
+      <p class="stat" id="herostat" aria-live="polite">0% do laço fechado</p>
+    </div>
+  </header>
+
+  <nav class="tabs" id="tabs" role="tablist" aria-label="Etapas da jornada"></nav>
+  <main class="panel" id="panel" role="tabpanel"></main>
+
+  <footer class="foot">
+    <p>Baseado no guia “Prevenção do câncer de mama”, do Outubro Rosa. Este material tem caráter informativo e não substitui a avaliação de um profissional de saúde.</p>
+    <div><button type="button" class="btn ghost" id="reset" data-act="reset">Recomeçar a jornada</button></div>
+  </footer>
+</div>
+
+<script>
+(function(){
+  var $=function(s){return document.querySelector(s)};
+  var esc=function(s){return String(s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})};
+
+  var DAYS=[
+    {d:'Segunda',a:'Caminhada rápida, em ritmo que ainda dá para conversar'},
+    {d:'Terça',a:'Fortalecimento: agachamento, prancha, elástico ou peso leve'},
+    {d:'Quarta',a:'Dança, zumba ou aula em grupo'},
+    {d:'Quinta',a:'Alongamento ou yoga'},
+    {d:'Sexta',a:'Bicicleta, natação ou hidroginástica'},
+    {d:'Sábado',a:'Atividade ao ar livre com família ou amigos'},
+    {d:'Domingo',a:'Descanso ou passeio leve'}
+  ];
+  var OPTS=[0,15,30,45];
+
+  var FOODS=[
+    {n:'Brócolis',k:'veg'},{n:'Arroz integral',k:'cer'},{n:'Feijão',k:'pro'},
+    {n:'Refrigerante',k:'swap',m:'Refrigerante fica de fora. Troque por água, água com limão ou fruta, ou suco natural sem açúcar.'},
+    {n:'Cenoura',k:'veg'},{n:'Ovo',k:'pro'},
+    {n:'Salsicha',k:'swap',m:'Embutidos como a salsicha ficam de fora. Experimente ovo, frango, peixe ou feijão.'},
+    {n:'Mandioca',k:'cer'},{n:'Frango',k:'pro'},{n:'Alface',k:'veg'},
+    {n:'Biscoito recheado',k:'swap',m:'Biscoito recheado fica de fora. Experimente fruta, castanhas ou iogurte natural.'},
+    {n:'Batata',k:'cer'},{n:'Peixe',k:'pro'},
+    {n:'Batata frita',k:'swap',m:'Frituras podem dar lugar a alimentos assados, grelhados ou cozidos.'},
+    {n:'Tomate',k:'veg'},
+    {n:'Salgadinho',k:'swap',m:'Salgadinho fica de fora. Experimente fruta, castanhas ou iogurte natural.'},
+    {n:'Pão branco',k:'swap',m:'Que tal trocar o pão branco por pão integral?'}
+  ];
+  var KLABEL={veg:'verduras e legumes',pro:'proteínas',cer:'cereais e raízes'};
+  var KCAP={veg:2,pro:1,cer:1};
+
+  var LBL={mito:'Mito',verdade:'Verdade',parte:'Em parte'};
+  var LBLS={mito:'É um mito.',verdade:'É verdade.',parte:'É verdade em parte.'};
+  var MYTHS=[
+    {s:'Só mulheres têm câncer de mama.',a:'mito',e:'Homens também podem ter câncer de mama, embora seja bem mais raro. A mesma atenção vale para eles.'},
+    {s:'Se não dói, não é nada.',a:'mito',e:'O nódulo do câncer de mama muitas vezes não causa dor.'},
+    {s:'Sem histórico na família, não preciso me preocupar.',a:'mito',e:'A maior parte dos casos ocorre em pessoas sem histórico familiar.'},
+    {s:'A mamografia previne o câncer.',a:'parte',e:'Ela não evita a doença, mas permite descobri-la cedo, quando o tratamento é mais eficaz.'},
+    {s:'Quem tem hábitos saudáveis não corre risco.',a:'mito',e:'Hábitos saudáveis reduzem o risco, mas não o eliminam. Eles protegem, mas não substituem os exames de rotina.'},
+    {s:'Todo nódulo na mama é câncer.',a:'mito',e:'Nem todo nódulo é câncer, mas só um profissional pode avaliar. Não espere o desconforto aumentar: quanto antes a investigação, melhor.'},
+    {s:'Observar e tocar as mamas no dia a dia ajuda a perceber mudanças.',a:'verdade',e:'O objetivo é notar qualquer mudança em relação ao que é normal para você. Não há um jeito único nem uma data certa.'}
+  ];
+  var ATITUDES=[
+    ['Conheça suas mamas','Observe e toque as mamas em momentos do dia a dia, como no banho ou ao se vestir. Não há um jeito único nem uma data certa: o objetivo é perceber qualquer mudança em relação ao que é normal para você.'],
+    ['Exame clínico anual','Uma vez por ano, procure um profissional de saúde para examinar as mamas. Esse atendimento está disponível nas unidades básicas de saúde (UBS).'],
+    ['Mamografia','É o principal exame para detectar alterações antes mesmo de aparecerem sintomas. As recomendações de idade e frequência variam entre os órgãos de saúde e as sociedades médicas, por isso converse com seu médico sobre o melhor momento para começar, geralmente a partir dos 40 anos, e siga a periodicidade indicada.'],
+    ['Histórico familiar','Se há casos de câncer de mama ou de ovário na família, avise o médico. Nessa situação, o acompanhamento costuma começar mais cedo e pode incluir exames adicionais.']
+  ];
+  var SCEN=[
+    {s:'No banho, você sente um nódulo na mama. Ele não dói. O que você faz?',
+     o:[{t:'Espero alguns meses para ver se passa. Se não dói, deve estar tudo bem.',ok:0},
+        {t:'Procuro uma UBS ou um médico para avaliar.',ok:1},
+        {t:'Pesquiso na internet e me tranquilizo por conta própria.',ok:0}],
+     e:'O nódulo do câncer de mama muitas vezes não causa dor. Nem todo nódulo é câncer, mas só um profissional pode avaliar. Quanto antes a investigação, melhor.'},
+    {s:'Sua mãe teve câncer de ovário e você nunca comentou isso na consulta. O que faz sentido?',
+     o:[{t:'Aviso o médico sobre o histórico. O acompanhamento costuma começar mais cedo.',ok:1},
+        {t:'Como não houve câncer de mama na família, não preciso me preocupar.',ok:0},
+        {t:'Só penso nisso se aparecer algum sintoma.',ok:0}],
+     e:'Casos de câncer de mama ou de ovário na família devem ser informados ao médico. Nessa situação, o acompanhamento costuma começar mais cedo e pode incluir exames adicionais.'},
+    {s:'Você nota a pele da mama avermelhada, enrugada, com aspecto de casca de laranja. E agora?',
+     o:[{t:'Espero o desconforto aumentar para ter certeza.',ok:0},
+        {t:'Procuro atendimento médico.',ok:1},
+        {t:'Deixo para a próxima consulta de rotina, no ano que vem.',ok:0}],
+     e:'Mudanças na pele da mama merecem avaliação médica. Não espere o desconforto aumentar: quanto antes a investigação, melhor.'},
+    {s:'Uma colega quer fazer o exame clínico das mamas, mas não consegue marcar a consulta.',
+     o:[{t:'Ajudo a agendar e a descobrir onde fazer. Um empurrãozinho faz diferença.',ok:1},
+        {t:'Cada um cuida da própria saúde, não é comigo.',ok:0},
+        {t:'Digo que isso pode esperar.',ok:0}],
+     e:'Ajudar quem tem dificuldade a marcar consultas e exames é uma das ações em grupo do guia. A UBS oferece o exame clínico das mamas e o encaminhamento para a mamografia pelo SUS.'}
+  ];
+  var SHARE='Estou fazendo a minha parte no Outubro Rosa. Hábitos saudáveis reduzem o risco, o exame clínico anual ajuda a descobrir cedo e qualquer mudança nas mamas deve ser avaliada por um profissional. Marque o seu exame clínico na UBS e convide mais três pessoas para fazer o mesmo.';
+
+  function shuffle(a){var b=a.slice();for(var i=b.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=b[i];b[i]=b[j];b[j]=t}return b}
+
+  var S;
+  function init(){
+    S={tab:'prevenir',week:DAYS.map(function(){return 0}),plate:{veg:[],pro:[],cer:[]},
+       msg:'',kind:'',shake:null,mi:0,myth:[],si:0,scen:[],
+       order:SCEN.map(function(s){return shuffle(s.o.map(function(_,i){return i}))}),
+       focus:'',rc:false};
+  }
+  init();
+
+  function progress(){
+    var sum=S.week.reduce(function(a,b){return a+b},0);
+    var wk=Math.min(sum,150)/150;
+    var pl=(S.plate.veg.length+S.plate.pro.length+S.plate.cer.length)/4;
+    var p=(wk+pl)/2, d=S.myth.length/MYTHS.length, a=S.scen.length/SCEN.length;
+    return {sum:sum,wk:wk,pl:pl,p:p,d:d,a:a,t:(p+d+a)/3};
+  }
+
+  /* ---------- views ---------- */
+  function tabsHtml(){
+    var P=progress();
+    var defs=[['prevenir','Prevenir',P.p],['detectar','Detectar',P.d],['agir','Agir',P.a],['fechar','Fechar o laço',P.t]];
+    return defs.map(function(x){
+      var id=x[0],l=x[1],v=x[2],sel=S.tab===id,done=v>=0.999;
+      var st=id==='fechar'?(done?'Pronto':'Aguardando'):(done?'Completa':Math.round(v*100)+'%');
+      return '<button type="button" class="tab'+(done?' done':'')+'" role="tab" id="tab-'+id+'" aria-selected="'+sel+'" aria-controls="panel" data-act="tab" data-tab="'+id+'" data-fk="tab-'+id+'">'
+        +'<span>'+l+'</span><span class="st">'+st+'</span><span class="bar"><i style="width:'+Math.round(v*100)+'%"></i></span></button>';
+    }).join('');
+  }
+
+  function used(i){return S.plate.veg.indexOf(i)>=0||S.plate.pro.indexOf(i)>=0||S.plate.cer.indexOf(i)>=0}
+
+  function viewPrevenir(){
+    var P=progress(),sum=P.sum,done=sum>=150;
+    var barPct=Math.min(100,sum/180*100);
+    var rows=DAYS.map(function(d,i){
+      var segs=OPTS.map(function(v){
+        return '<button type="button" aria-pressed="'+(S.week[i]===v)+'" aria-label="'+v+' minutos" data-act="min" data-i="'+i+'" data-v="'+v+'" data-fk="min-'+i+'-'+v+'">'+v+'</button>';
+      }).join('');
+      return '<div class="day"><div><b>'+d.d+'</b><small>'+d.a+'</small></div><div class="seg" role="group" aria-label="Minutos de atividade: '+d.d+'">'+segs+'</div></div>';
+    }).join('');
+    var weekNote=done
+      ?'<p class="note ok"><b>Meta batida.</b> Foram '+sum+' minutos. O guia sugere cerca de 175 minutos numa semana comum, e você já passou do mínimo.</p>'
+      :'<p class="note">Faltam <b>'+(150-sum)+' minutos</b>. O ritmo em que ainda dá para conversar já conta, e pequenas doses somam.</p>';
+
+    var cells=[['veg',0],['pro',0],['veg',1],['cer',0]].map(function(x){
+      var k=x[0],j=x[1],idx=S.plate[k][j],has=idx!==undefined,label=KLABEL[k];
+      return '<button type="button" class="cell '+k+(has?'':' empty')+'"'+(has?'':' disabled')+' data-act="unplace" data-k="'+k+'" data-j="'+j+'" data-fk="cell-'+k+'-'+j+'" aria-label="'+(has?label+': '+FOODS[idx].n+'. Toque para tirar do prato.':label+': vazio')+'">'
+        +(has?'<b>'+FOODS[idx].n+'</b>':'<span>'+label+'</span>')+'</button>';
+    }).join('');
+    var pool=FOODS.map(function(f,i){
+      return '<button type="button" class="food'+(S.shake===i?' nope':'')+'" data-act="food" data-i="'+i+'" data-fk="food-'+i+'"'+(used(i)?' disabled':'')+'>'+f.n+'</button>';
+    }).join('');
+    var filled=Math.round(P.pl*4);
+    var plateNote=S.msg?'<p class="note '+S.kind+'" role="status">'+S.msg+'</p>':'<p class="note" role="status">Toque nos alimentos para montar o prato. Alguns não cabem nele.</p>';
+
+    var gate='';
+    if(P.p>=0.999){
+      gate='<div class="verdict part"><strong>Prevenir reduz o risco, mas não o elimina.</strong><span>Mesmo quem tem uma vida saudável pode desenvolver a doença. Por isso os hábitos não substituem os exames de rotina. Agora vem a etapa de detectar.</span></div>'
+        +'<div class="row"><button type="button" class="btn primary" data-act="goto" data-tab="detectar" data-fk="goto-detectar">Ir para Detectar</button></div>';
+    }
+
+    return '<section class="block">'
+      +'<h2>Monte sua semana de movimento</h2>'
+      +'<p class="sub">A meta é de pelo menos 150 minutos por semana de exercício moderado. Parece grande, mas fica leve quando dividida. Toque nos minutos de cada dia.</p>'
+      +'<div class="readout"><div class="big">'+sum+'<span>min na semana</span></div><span class="chip'+(done?' ok':'')+'">'+(done?'Meta batida':'Faltam '+(150-sum)+' min')+'</span></div>'
+      +'<div><div class="meter'+(done?' ok':'')+'" role="img" aria-label="'+sum+' de 150 minutos"><div class="fill" style="width:'+barPct+'%"></div><div class="goal"></div></div><div class="cap"><span class="g">meta 150</span></div></div>'
+      +'<div><div class="units"><span>Dia e atividade sugerida</span><span>Minutos</span></div><div class="week">'+rows+'</div></div>'
+      +weekNote
+      +'<p class="sub"><b>Comece devagar.</b> Se está sedentária há muito tempo ou tem alguma condição de saúde, converse com um médico antes de iniciar e aumente o ritmo aos poucos.</p>'
+      +'</section>'
+      +'<section class="block">'
+      +'<h2>Monte o prato do dia</h2>'
+      +'<p class="sub">Não é preciso mudar tudo de uma vez. Comece com trocas pequenas e fáceis de manter.</p>'
+      +'<div class="plate-wrap"><div class="plate" role="group" aria-label="Prato com quatro espaços">'+cells+'</div>'
+      +'<ul class="legend"><li><i class="sw-veg"></i><div><b>½ Verduras e legumes</b><span>Variados e coloridos</span></div></li>'
+      +'<li><i class="sw-pro"></i><div><b>¼ Proteínas</b><span>Feijão, ovos, peixe, frango</span></div></li>'
+      +'<li><i class="sw-cer"></i><div><b>¼ Cereais e raízes</b><span>Arroz, batata, mandioca, de preferência integrais</span></div></li></ul></div>'
+      +'<div class="pool" role="group" aria-label="Alimentos">'+pool+'</div>'
+      +plateNote
+      +'<div class="row"><span class="chip'+(filled===4?' ok':'')+'">'+filled+' de 4 espaços</span><button type="button" class="btn ghost" data-act="clearplate" data-fk="clearplate"'+(filled?'':' disabled')+'>Limpar prato</button></div>'
+      +'</section>'
+      +(gate?'<section class="block">'+gate+'</section>':'');
+  }
+
+  function dots(n,k){var s='';for(var i=0;i<n;i++)s+='<i'+(i<k?' class="on"':'')+'></i>';return '<div class="dots" aria-hidden="true">'+s+'</div>'}
+
+  function viewDetectar(){
+    var n=MYTHS.length,i=S.mi,game='';
+    if(i>=n){
+      var hits=S.myth.filter(function(x,k){return x===MYTHS[k].a}).length;
+      game='<div class="verdict ok"><strong>Rodada completa: '+hits+' de '+n+' de primeira.</strong><span>Os hábitos protegem, mas não substituem os exames de rotina. Descobrir cedo é o que muda o caminho.</span></div>'
+        +'<ul class="recap">'+MYTHS.map(function(m){return '<li><span>'+esc(m.s)+'</span><em>'+LBL[m.a]+'</em></li>'}).join('')+'</ul>'
+        +'<div class="row"><button type="button" class="btn primary" data-act="goto" data-tab="agir" data-fk="goto-agir">Ir para Agir</button></div>';
+    }else{
+      var m=MYTHS[i],ans=S.myth[i],answered=ans!==undefined;
+      var btn=function(k){
+        var c='btn';
+        if(answered){if(k===m.a)c+=' ok';else if(k===ans)c+=' bad'}
+        return '<button type="button" class="'+c+'" data-act="myth" data-v="'+k+'" data-fk="myth-'+k+'"'+(answered?' disabled':'')+'>'+LBL[k]+'</button>';
+      };
+      var fb='';
+      if(answered){
+        var ok=ans===m.a;
+        fb='<div class="verdict '+(ok?'ok':'bad')+'" role="status"><strong>'+(ok?'Certo. ':'Não foi dessa vez. ')+LBLS[m.a]+'</strong><span>'+m.e+'</span></div>'
+          +'<div class="row"><button type="button" class="btn primary" data-act="mnext" data-fk="mnext">'+(i===n-1?'Ver resultado':'Próxima afirmação')+'</button></div>';
+      }
+      game='<div class="qcard" tabindex="-1" id="qcard"><div class="qhead"><span class="label">Afirmação '+(i+1)+' de '+n+'</span>'+dots(n,S.myth.length)+'</div>'
+        +'<p class="q">“'+esc(m.s)+'”</p></div>'
+        +'<div class="answers" role="group" aria-label="Sua resposta">'+btn('mito')+btn('parte')+btn('verdade')+'</div>'+fb;
+    }
+    var att=ATITUDES.map(function(a){return '<details><summary>'+a[0]+'</summary><p>'+a[1]+'</p></details>'}).join('');
+    return '<section class="block"><h2>Mito, verdade ou em parte?</h2>'
+      +'<p class="sub">Descobrir o câncer de mama no início aumenta muito as possibilidades de tratamento e cura. Antes de ver como, teste o que você sabe.</p>'+game+'</section>'
+      +'<section class="block"><h2>Quatro atitudes para descobrir cedo</h2><div>'+att+'</div></section>';
+  }
+
+  function viewAgir(){
+    var n=SCEN.length,i=S.si,body='';
+    if(i>=n){
+      var hits=S.scen.filter(function(x,k){return SCEN[k].o[x].ok}).length;
+      body='<div class="verdict ok"><strong>'+hits+' de '+n+' escolhas de primeira.</strong><span>Prevenir, detectar e agir se completam. Falta só fechar o laço.</span></div>'
+        +'<div class="row"><button type="button" class="btn primary" data-act="goto" data-tab="fechar" data-fk="goto-fechar">Fechar o laço</button></div>';
+    }else{
+      var sc=SCEN[i],ans=S.scen[i],answered=ans!==undefined;
+      var opts=S.order[i].map(function(oi,pos){
+        var o=sc.o[oi],c='btn opt';
+        if(answered){if(o.ok)c+=' ok';else if(oi===ans)c+=' bad'}
+        return '<button type="button" class="'+c+'" data-act="opt" data-i="'+oi+'" data-fk="opt-'+oi+'"'+(answered?' disabled':'')+'><span class="l">'+String.fromCharCode(65+pos)+'</span><span>'+o.t+'</span></button>';
+      }).join('');
+      var fb='';
+      if(answered){
+        var ok=sc.o[ans].ok;
+        fb='<div class="verdict '+(ok?'ok':'part')+'" role="status"><strong>'+(ok?'Boa escolha.':'Vale repensar essa escolha.')+'</strong><span>'+sc.e+'</span></div>'
+          +'<div class="row"><button type="button" class="btn primary" data-act="snext" data-fk="snext">'+(i===n-1?'Ver resultado':'Próxima situação')+'</button></div>';
+      }
+      body='<div class="qcard" tabindex="-1" id="qcard"><div class="qhead"><span class="label">Situação '+(i+1)+' de '+n+'</span>'+dots(n,S.scen.length)+'</div>'
+        +'<p class="q">'+sc.s+'</p></div><div class="opts" role="group" aria-label="Opções">'+opts+'</div>'+fb;
+    }
+    return '<section class="block"><h2>O que você faria?</h2>'
+      +'<p class="sub">Qualquer mudança nas mamas deve ser avaliada por um profissional. Escolha a atitude para cada situação.</p>'+body+'</section>';
+  }
+
+  function viewFechar(){
+    var P=progress();
+    if(P.t<0.999){
+      var items=[
+        ['Semana de movimento',P.sum>=150,Math.min(P.sum,150)+' de 150 min','prevenir'],
+        ['Prato do dia',P.pl>=0.999,Math.round(P.pl*4)+' de 4 espaços','prevenir'],
+        ['Mito, verdade ou em parte?',P.d>=0.999,S.myth.length+' de '+MYTHS.length,'detectar'],
+        ['O que você faria?',P.a>=0.999,S.scen.length+' de '+SCEN.length,'agir']
+      ];
+      var li=items.map(function(x){
+        return '<li><span>'+x[0]+' · '+x[2]+'</span>'+(x[1]?'<span class="ok">Completa</span>':'<button type="button" class="btn ghost" data-act="goto" data-tab="'+x[3]+'" data-fk="todo-'+x[3]+'">Ir</button>')+'</li>';
+      }).join('');
+      return '<section class="block"><h2>O laço ainda está aberto</h2><p class="sub">Complete as quatro atividades para fechar o laço. Cada uma conta um pedaço do caminho.</p><ul class="todo">'+li+'</ul></section>';
+    }
+    var h1=S.myth.filter(function(x,k){return x===MYTHS[k].a}).length;
+    var h2=S.scen.filter(function(x,k){return SCEN[k].o[x].ok}).length;
+    return '<section class="block"><h2>O laço está fechado</h2>'
+      +'<p class="sub">Você passou pelas três etapas do guia. Acertos de primeira: '+(h1+h2)+' de '+(MYTHS.length+SCEN.length)+'.</p>'
+      +'<div class="pillars">'
+      +'<div class="pillar"><b>Prevenir</b><span>Hábitos saudáveis reduzem o risco, mas não o eliminam.</span></div>'
+      +'<div class="pillar"><b>Detectar</b><span>Quanto mais cedo o diagnóstico, maiores as chances de cura.</span></div>'
+      +'<div class="pillar"><b>Agir</b><span>Qualquer mudança nas mamas deve ser avaliada por um profissional.</span></div>'
+      +'</div></section>'
+      +'<section class="block"><h2>Corrente do cuidado</h2>'
+      +'<p class="sub">A prevenção fica mais forte quando é coletiva. Envie esta mensagem para três amigas, amigos ou familiares.</p>'
+      +'<p class="msg" id="sharemsg">'+esc(SHARE)+'</p>'
+      +'<div class="row"><button type="button" class="btn primary" id="copybtn" data-act="copy">Copiar mensagem</button><span class="sub" id="copyhint" role="status"></span></div></section>'
+      +'<section class="block"><h2>Onde buscar ajuda</h2><ul class="help">'
+      +'<li><b>UBS (posto de saúde):</b> exame clínico das mamas e encaminhamento para a mamografia pelo SUS.</li>'
+      +'<li><b>Ginecologista ou mastologista:</b> avaliação individual, definição de exames e plano de acompanhamento.</li>'
+      +'<li><b>Planos de saúde e clínicas:</b> consultas e exames conforme a cobertura contratada.</li>'
+      +'</ul></section>';
+  }
+
+  /* ---------- render ---------- */
+  function updateRibbon(){
+    var P=progress(),el=$('#rfill');
+    el.style.strokeDashoffset=String(100-P.t*100);
+    el.style.opacity=P.t>0.005?'1':'0';
+    $('#herostat').textContent=P.t>=0.999?'Laço fechado':Math.round(P.t*100)+'% do laço fechado';
+  }
+  function render(){
+    var ae=document.activeElement,fk=ae&&ae.getAttribute?ae.getAttribute('data-fk'):null;
+    $('#tabs').innerHTML=tabsHtml();
+    var views={prevenir:viewPrevenir,detectar:viewDetectar,agir:viewAgir,fechar:viewFechar};
+    $('#panel').innerHTML=views[S.tab]();
+    $('#panel').setAttribute('aria-labelledby','tab-'+S.tab);
+    updateRibbon();
+    S.shake=null;
+    var rb=$('#reset');rb.textContent=S.rc?'Toque de novo para apagar o progresso':'Recomeçar a jornada';
+    if(S.focus==='q'){var q=$('#qcard');if(q)q.focus({preventScroll:true});S.focus=''}
+    else if(fk){var el=document.querySelector('[data-fk="'+fk+'"]');if(el&&!el.disabled)el.focus({preventScroll:true})}
+  }
+  function scrollToTabs(){
+    var rm=window.matchMedia&&window.matchMedia('(prefers-reduced-motion:reduce)').matches;
+    try{$('#tabs').scrollIntoView({behavior:rm?'auto':'smooth',block:'start'})}catch(e){}
+  }
+
+  /* ---------- actions ---------- */
+  function place(i){
+    var f=FOODS[i];
+    if(used(i))return;
+    if(f.k==='swap'){S.msg=f.m;S.kind='warn';S.shake=i;return}
+    var arr=S.plate[f.k];
+    if(arr.length>=KCAP[f.k]){S.msg='O espaço de '+KLABEL[f.k]+' já está completo. Toque em um item do prato para trocá-lo.';S.kind='warn';return}
+    arr.push(i);
+    var full=S.plate.veg.length+S.plate.pro.length+S.plate.cer.length===4;
+    if(full){S.msg='<b>Prato montado.</b> ½ verduras e legumes, ¼ proteínas e ¼ cereais e raízes. Faça as compras com uma lista e priorize a área de hortifrúti: o que não está na despensa dificilmente vira lanche.';S.kind='ok'}
+    else{S.msg=f.n+' entrou no prato.';S.kind='ok'}
+  }
+
+  document.addEventListener('click',function(e){
+    var b=e.target.closest?e.target.closest('[data-act]'):null;
+    if(!b||b.disabled)return;
+    var a=b.getAttribute('data-act'),d=b.dataset;
+    if(a!=='reset')S.rc=false;
+    switch(a){
+      case 'tab':S.tab=d.tab;break;
+      case 'goto':S.tab=d.tab;render();scrollToTabs();return;
+      case 'min':S.week[+d.i]=+d.v;break;
+      case 'food':place(+d.i);break;
+      case 'unplace':S.plate[d.k].splice(+d.j,1);S.msg='';S.kind='';break;
+      case 'clearplate':S.plate={veg:[],pro:[],cer:[]};S.msg='';S.kind='';break;
+      case 'myth':if(S.myth.length===S.mi)S.myth.push(d.v);break;
+      case 'mnext':S.mi++;S.focus='q';break;
+      case 'opt':if(S.scen.length===S.si)S.scen.push(+d.i);break;
+      case 'snext':S.si++;S.focus='q';break;
+      case 'copy':copyShare();return;
+      case 'reset':
+        if(!S.rc){S.rc=true}else{init()}
+        break;
+    }
+    render();
+  });
+
+  function copyShare(){
+    var hint=$('#copyhint'),btn=$('#copybtn');
+    var fallback=function(){
+      var el=$('#sharemsg');if(!el)return;
+      try{var r=document.createRange();r.selectNodeContents(el);var s=window.getSelection();s.removeAllRanges();s.addRange(r)}catch(e){}
+      if(hint)hint.textContent='Texto selecionado. Copie pelo menu do seu aparelho.';
+    };
+    if(navigator.clipboard&&navigator.clipboard.writeText){
+      navigator.clipboard.writeText(SHARE).then(function(){
+        if(btn)btn.textContent='Copiado';
+        if(hint)hint.textContent='';
+        setTimeout(function(){var b2=$('#copybtn');if(b2)b2.textContent='Copiar mensagem'},2200);
+      },fallback);
+    }else{fallback()}
+  }
+
+  render();
+})();
+</script>
+
+</body></html>
